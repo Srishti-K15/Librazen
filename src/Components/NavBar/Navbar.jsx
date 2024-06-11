@@ -1,6 +1,7 @@
 
 import React, {useEffect, useState} from 'react'
 import './Navbar.css'
+import { Link } from 'react-router-dom';
 
 
 const Navbar = () => {
@@ -15,20 +16,23 @@ const Navbar = () => {
 
   return (
     <nav className={`navbar ${sticky? 'dark-nav': ''}`}>
-        <div className="navbar-logo">
-        <h1 style={{fontFamily:"cursive"}}>Librazen</h1>
-        </div>
-        <div className="navbar-search"><input type="text" placeholder="Search books" className="search-bar"></input>
+        <div className="container">
+          <div className="logo">
+            <Link to="/">Librazen</Link>
+          </div>
+        <div className="navbar-search">
+          <input type="text" placeholder="Search books" className="search-bar"></input>
         </div>
         <ul className="navbar-menu">
-            <li>Home</li>
-            <li>Catalog</li>
-            <li>Leaderboard</li>
-            <li>Contact us</li>
-            <li>Login</li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About us</Link></li>
+            <li><Link to="/catalogue">Catalogue</Link></li>
+            <li><Link to="/leaderboard">Leaderboard</Link></li>
+            <li><Link to="/login">Login</Link></li>  
         </ul>
+        </div>
     </nav>
   );
-}
+};
 
 export default Navbar
