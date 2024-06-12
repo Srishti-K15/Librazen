@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react'
 import './Navbar.css'
 import { Link } from 'react-router-dom';
+import logo from '../../images/logo.png'
 
 
 const Navbar = () => {
@@ -17,8 +18,10 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${sticky? 'dark-nav': ''}`}>
         <div className="container">
-          <div className="logo">
-            <Link to="/">Librazen</Link>
+          <div className="content">
+            <Link to="/" className='text'>Librazen
+            <img src={logo} alt='' className='logo'></img>
+            </Link>
           </div>
         <div className="navbar-search">
           <input type="text" placeholder="Search books" className="search-bar"></input>

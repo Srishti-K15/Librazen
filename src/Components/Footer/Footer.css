@@ -1,7 +1,8 @@
 
 footer {
     display: flex;
-    background: white;
+    background: #2B3D4F;
+    color: white;
     text-align: center;
     padding: 1rem 0;
     position: relative;
