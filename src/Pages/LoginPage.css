@@ -5,16 +5,14 @@ body {
     background-color: white
 }
 
-/* Login Page Wrapper */
 .login-page-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 60px); /* Adjust according to the height of the navbar */
-    padding-top: 60px; /* Adjust this value to increase/decrease the space above the login container */
+    min-height: calc(100vh - 60px); 
+    padding-top: 60px; 
 }
 
-/* Login Container Styles */
 .login-container {
     width: 100%;
     max-width: 400px;
