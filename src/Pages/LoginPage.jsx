@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../Components/NavBar/Navbar'
 import Footer from '../Components/Footer/Footer'
+import { Link } from 'react-router-dom'
 import './LoginPage.css'
 
 const LoginPage = () => {
@@ -34,6 +35,8 @@ const LoginPage = () => {
                 </div>
                 <button type="submit" className="btn">Login</button>
             </form>
+            <p>Don't have an account? <Link to="/signup" className='signup'>Sign Up</Link>
+      </p>
         </div>
         </div>
         <Footer/>

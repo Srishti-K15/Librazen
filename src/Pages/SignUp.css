@@ -5,15 +5,15 @@ body {
     background-color: white
 }
 
-.login-page-wrapper {
+.signup-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px); 
+    min-height: calc(100vh - 60px); 
     padding-top: 60px; 
 }
 
-.login-container {
+.signup-container {
     width: 100%;
     max-width: 400px;
     padding: 2rem;
@@ -23,7 +23,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.login-container h2 {
+.signup-container h2 {
     color: #2C3E50;
     text-align: center;
     margin-bottom: 1rem;
@@ -61,11 +61,4 @@ body {
 }
 .btn:hover{
     background-color: #2980B9;
-}
-.signup{
-    margin-top: 10px;
-    color: #007bff;
-}
-.signup:hover{
-    text-decoration: underline;
 }
