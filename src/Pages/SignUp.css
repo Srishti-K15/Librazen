@@ -4,13 +4,20 @@ body {
     margin: 0;
     background-color: white
 }
+.signupPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
 .signup-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 60px); 
-    padding-top: 60px; 
+    flex-grow: 1;
+    width: 100%;
 }
 
 .signup-container {
@@ -61,4 +68,14 @@ body {
 }
 .btn:hover{
     background-color: #2980B9;
+}
+.link{
+    padding-top: 15px;
+}
+.login{
+    margin-top: 10px;
+    color: #007bff;
+}
+.login:hover{
+    text-decoration: underline;
 }

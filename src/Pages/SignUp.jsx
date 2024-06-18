@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Navbar from '../Components/NavBar/Navbar'
 import Footer from '../Components/Footer/Footer'
 import './SignUp.css'
+import { Link } from 'react-router-dom'
 import supabase from '../config/supabaseClient';
 
 function SignUp ()  {
@@ -50,7 +51,7 @@ function SignUp ()  {
 
 
   return (
-    <div>
+    <div className='signupPage'>
         <Navbar />
         <div className="signup-wrapper">
         <div className="signup-container">
@@ -77,6 +78,7 @@ function SignUp ()  {
         )}
       </form>
       <p>{message}</p>
+      <div className='link'> <p>Already have an account? <Link to='/login' className='login'>Login</Link></p></div>
         </div>
         </div>
         <Footer/>

@@ -2,7 +2,7 @@ import React from 'react'
 import './Footer.css'
 import logo from '../../images/logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faXTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faXTwitter, faInstagram, faLinkedin, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
@@ -24,7 +24,8 @@ const Footer = () => {
             <li><a href="https://twitter.com/yourprofile" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faXTwitter} alt="Twitter" /></a></li>
             <li><a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} alt="Instagram" /></a></li>
             <li><a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faLinkedin} alt="LinkedIn" /></a></li>
-          </ul>
+            <li><a href="https://youtube.com/in/yourchannel" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faYoutube} alt="Youtube" /></a></li>
+            </ul>
         </div>
         <div className="footer-section contact">
           <p>Contact us: 
