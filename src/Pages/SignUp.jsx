@@ -72,7 +72,7 @@ function SignUp ()  {
                     required />
                 </div>
                 { !isSignedUp && (
-                <button type="submit" className="btn" onClick={handleSignUp} disabled={loading}>
+                <button type="submit" className="btn" disabled={loading}>
           {loading ? 'Signing Up...' : 'Sign Up'}
         </button>
         )}

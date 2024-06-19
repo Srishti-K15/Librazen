@@ -6,7 +6,7 @@ import './Profile.css'
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  //const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -17,11 +17,12 @@ const Profile = () => {
       }
       setUser(user);
     
-    /*if(user){
+    if(user){
       console.log("Fetched user ID:", user.id); 
       let {data: profile, profileError} = await supabase
-      .from('profile')
+      .from('profiles')
       .select('*')
+      .eq('id', user.id)
       .single();
 
       if(profileError){
@@ -30,12 +31,12 @@ const Profile = () => {
       else{
         setProfile(profile);
       }
-    }*/
+    }
   };
   fetchUser();
   }, []);
 
-  if (!user ) return <div>Loading...</div>;
+  if (!user|| !profile ) return <div>Loading...</div>;
 
   return (
     <div className='profilePage'>
@@ -43,11 +44,11 @@ const Profile = () => {
       <div className='profile'>
       <h1>Profile</h1>
       <div className='details'>
-      <p>Name: {}</p>
+      <p>Name: {profile.full_name}</p>
       <p>Email: {user.email}</p>
       <p>ID: {user.id} </p>
-      <p>Dues: </p>
-      <p>Return date: </p>
+      <p>Dues: {profile.dues}</p>
+      <p>Due date:{profile.due_date} </p>
       <p>Created at: {user.created_at}</p>
       </div>
       </div>
@@ -57,4 +58,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
