@@ -4,6 +4,9 @@ import HomePage from './Pages/HomePage'
 import LoginPage from './Pages/LoginPage';
 import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
+import AdminPortal from './Components/AdminPortal';
+import Books from './Pages/BooksPage'
+import './index.css'
 
 const App = () => {
   return (
@@ -13,6 +16,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/admin" element={<AdminPortal />}></Route>
+        <Route path="/books" element={<Books />}></Route>
       </Routes>
     </Router>
   );

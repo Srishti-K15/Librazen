@@ -4,13 +4,14 @@
   box-sizing: border-box;
   font-family: sans-serif;
 }
-body{
-  background: white;
-}
+
 a{
   text-decoration: none;
   color: inherit;
   line-height: 1;
   cursor: pointer;
+}
+body{
+  background-color: #ECEFF1;
 }
 

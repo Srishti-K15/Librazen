@@ -25,7 +25,7 @@
     font-size: 30px;
     font-weight: bold;
 }
-.content{
+.Logo{
     width: 15%;
 }
 .logo{
@@ -44,7 +44,6 @@
     font-size: 16px;
 }
 .navbar-menu{
-    
     justify-content: right;
     display: flex;
     list-style: none;
@@ -61,4 +60,5 @@
 }
 .navbar-menu li:hover{
     background-color: hsla(210, 30%, 39%, 1);
+    cursor: pointer;
 }

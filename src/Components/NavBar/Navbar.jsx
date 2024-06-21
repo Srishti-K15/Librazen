@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${sticky? 'dark-nav': ''}`}>
         <div className="container">
-          <div className="content">
+          <div className="Logo">
             <Link to="/" className='text'>Librazen
             <img src={logo} alt='' className='logo'></img>
             </Link>
@@ -29,7 +29,7 @@ const Navbar = () => {
         <ul className="navbar-menu">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About us</Link></li>
-            <li><Link to="/catalogue">Catalogue</Link></li>
+            <li><Link to="/books">Catalogue</Link></li>
             <li><Link to="/leaderboard">Leaderboard</Link></li>
             <li><Link to="/login">Login</Link></li> 
             <li><Link to="/profile">Profile</Link></li>

@@ -1,0 +1,32 @@
+.book-card{
+  border:1px solid #7F8C8D;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 250px;
+  margin: 10px;
+  padding: 10px;
+  background-color: white ;
+  align-items: center;
+  justify-content: center;
+} 
+.book-cover{
+  width: 100%;
+  object-fit: cover;
+}
+.book-card h4{
+  font-weight: bold;
+  color: #2C3E50;
+
+}
+.book-card p{
+  margin: 5px 0 0;
+}
+.author{
+  color:#4B5563;
+}
+.availability {
+  color: #14B8A6; 
+}
+.unavailable {
+  color: #FB7185;
+}
