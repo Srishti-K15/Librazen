@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../config/supabaseClient';
 import BookCard from '../Components/BookCard/BookCard';
 import './BooksPage.css';
-import Layout from '../Components/Layout/layout';
+import Layout from '../Components/Layout/Layout';
 
 const BookPage = () => {
   const [books, setBooks] = useState([]);

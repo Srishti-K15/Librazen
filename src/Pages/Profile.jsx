@@ -1,59 +1,128 @@
 import React, { useEffect, useState } from 'react';
-import  supabase  from '../config/supabaseClient';
-import Navbar from '../Components/NavBar/Navbar'
-import Footer from '../Components/Footer/Footer'
-import './Profile.css'
+import supabase from '../config/supabaseClient';
+import Layout from '../Components/Layout/Layout';
+import './Profile.css';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [borrowedBooks, setBorrowedBooks] = useState([]);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) {
-        console.log("Error fetching user", userError);
-        return;
-      }
-      setUser(user);
+  const fetchUser = async () => {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.log("Error fetching user", userError);
+      return;
+    }
+    setUser(user);
     
-    if(user){
+    if (user) {
       console.log("Fetched user ID:", user.id); 
-      let {data: profile, profileError} = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+      let { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-      if(profileError){
+      if (profileError) {
         console.log("Error fetching profile", profileError);
-      }
-      else{
+      } else {
         setProfile(profile);
+      }
+
+      let { data: borrowedBooks, error: booksError } = await supabase
+        .from('borrow')
+        .select(`
+          id,
+          borrow_date,
+          due_date,
+          return_date,
+          books ( id, title, available )
+        `)
+        .eq('user_id', user.id);
+        
+      if (booksError) {
+        console.log("Error fetching borrowed books", booksError);
+      } else {
+        setBorrowedBooks(borrowedBooks);
       }
     }
   };
-  fetchUser();
+
+  useEffect(() => {
+    fetchUser();
   }, []);
 
-  if (!user|| !profile ) return <div>Loading...</div>;
+  const returnBook = async (borrowId, bookId) => {
+    const { error } = await supabase
+      .from('borrow')
+      .update({ return_date: new Date() })
+      .eq('id', borrowId);
+      
+    if (error) {
+      console.log('Error returning book:', error);
+    } else {
+      await supabase
+        .from('books')
+        .update({ available: true })
+        .eq('id', bookId);
+      fetchUser();  
+    }
+  };
+
+  const borrowBook = async (bookId) => {
+    const { data, error } = await supabase
+      .from('borrow')
+      .insert([{ user_id: user.id, book_id: bookId, borrow_date: new Date(), return_date: null }]);
+      
+    if (error) {
+      console.log('Error borrowing book:', error);
+    } else {
+      await supabase
+        .from('books')
+        .update({ available: false })
+        .eq('id', bookId);
+      fetchUser();  
+    }
+  };
+
+  if (!user || !profile) return <div>Loading...</div>;
 
   return (
-    <div className='profilePage'>
-      <Navbar />
+    <Layout>
       <div className='profile'>
-      <h1>Profile</h1>
-      <div className='details'>
-      <p>Name: {profile.full_name}</p>
-      <p>Email: {user.email}</p>
-      <p>ID: {user.id} </p>
-      <p>Dues: {profile.dues}</p>
-      <p>Due date:{profile.due_date} </p>
-      <p>Created at: {user.created_at}</p>
+        <h1>Profile</h1>
+        <div className='details'>
+          <p>Name: {profile.full_name}</p>
+          <p>Email: {user.email}</p>
+          <p>ID: {user.id}</p>
+          <p>Dues: {profile.dues}</p>
+        </div>
+        <h2>Borrowed Books</h2>
+        <table className='borrowed-books-table'>
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Borrow Date</th>
+              <th>Due Date</th>
+              <th>Return Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {borrowedBooks.map(book => (
+              <tr key={book.id}>
+                <td>{book.books.title}</td>
+                <td>{new Date(book.borrow_date).toLocaleDateString("en-IN")}</td>
+                <td>{new Date(book.due_date).toLocaleDateString("en-IN")}</td>
+                <td>{book.return_date ? new Date(book.return_date).toLocaleDateString() : 
+                  <button className='return-btn' onClick={() => returnBook(book.id, book.books.id)}>Return</button>
+                  }</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      </div>
-      <Footer/>
-    </div>
+    </Layout>
   );
 };
 

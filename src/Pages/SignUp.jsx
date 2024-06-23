@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../Components/NavBar/Navbar'
-import Footer from '../Components/Footer/Footer'
+import Layout from '../Components/Layout/Layout'
 import './SignUp.css'
 import { Link } from 'react-router-dom'
 import supabase from '../config/supabaseClient';
@@ -51,9 +50,8 @@ function SignUp ()  {
 
 
   return (
+    <Layout>
     <div className='signupPage'>
-        <Navbar />
-        <div className="signup-wrapper">
         <div className="signup-container">
             <h2>Sign up</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleSignUp(); }}>
@@ -80,9 +78,8 @@ function SignUp ()  {
       <p>{message}</p>
       <div className='link'> <p>Already have an account? <Link to='/login' className='login'>Login</Link></p></div>
         </div>
-        </div>
-        <Footer/>
     </div>
+    </Layout>
   );
 };
 

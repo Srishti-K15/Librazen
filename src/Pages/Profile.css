@@ -1,21 +1,12 @@
-.profilePage{
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
 .profile {
-    width: 100%;
+  width: 100%;
   padding: 20px;
   background-color: #f8f9fa;
   border: 1px solid #ddd;
   border-radius: 10px;
-  margin: 20px;
-  max-width: 600px;
   margin: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 75px;
-  margin-bottom: 10px;
-  flex-grow: 1;
 }
 
 .details {
@@ -28,21 +19,37 @@
 
 .profile h1 {
   text-align: center;
-  color: #333;
 }
 
 .profile p {
   font-size: 16px;
-  color: #555;
 }
-
-@media (max-width: 768px) {
-  .profile {
-    padding: 15px;
-    margin: 10px;
-  }
-
-  p {
-    font-size: 14px;
-  }
+.borrowed-books-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.borrowed-books-table th,
+.borrowed-books-table td {
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  text-align: left;
+}
+.borrowed-books-table th {
+  background-color: #60a5fa;
+  color: white;
+}
+.borrowed-books-table tbody tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
+.borrowed-books-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+.borrow-btn{
+  background-color: green;
+  color: white;
+}
+.return-btn{
+  background-color: blue;
+  color: white;
 }

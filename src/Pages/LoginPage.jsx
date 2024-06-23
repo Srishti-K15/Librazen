@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../Components/NavBar/Navbar'
-import Footer from '../Components/Footer/Footer'
+import Layout from '../Components/Layout/Layout'
 import { useNavigate, Link } from 'react-router-dom'
 import supabase from '../config/supabaseClient'
 import './LoginPage.css'
@@ -26,9 +25,8 @@ const LoginPage = () => {
 };
 
   return (
+    <Layout>
     <div className='loginPage'>
-        <Navbar />
-        <div className="login-page-wrapper">
         <div className="login-container">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
@@ -51,9 +49,8 @@ const LoginPage = () => {
             </form>
             <div className='link'><p>Don't have an account? <Link to='/signup' className='signup'>Sign Up</Link></p></div>
         </div>
-        </div>
-        <Footer/>
     </div>
+    </Layout>
   );
 };
 
