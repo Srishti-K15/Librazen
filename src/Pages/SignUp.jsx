@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../Components/Layout/Layout'
+import Layout from '../Components/Layout/layout'
 import './SignUp.css'
 import { Link } from 'react-router-dom'
 import supabase from '../config/supabaseClient';

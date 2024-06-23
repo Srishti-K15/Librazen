@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import supabase from '../config/supabaseClient'
 import './AdminPortal.css'
-import Layout from './Layout/Layout'
+import Layout from './Layout/layout'
 
 const AdminPortal = () => {
     const [books, setBooks] = useState([]);

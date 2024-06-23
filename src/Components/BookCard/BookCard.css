@@ -8,6 +8,7 @@
   background-color: white ;
   align-items: center;
   justify-content: center;
+  text-align: center;
 } 
 .book-cover{
   width: 100%;
@@ -24,9 +25,17 @@
 .author{
   color:#4B5563;
 }
-.availability {
-  color: #14B8A6; 
+.borrow-btn {
+  padding: 10px 20px;
+  background-color: #20c997;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 12px;
 }
-.unavailable {
-  color: #FB7185;
+
+.borrow-btn.disabled {
+  background-color: lightgrey;
+  cursor: not-allowed;
 }

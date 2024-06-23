@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../config/supabaseClient';
-import Layout from '../Components/Layout/Layout';
+import Layout from '../Components/Layout/layout';
 import './Profile.css';
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -70,34 +71,41 @@ const Profile = () => {
     }
   };
 
-  const borrowBook = async (bookId) => {
-    const { data, error } = await supabase
-      .from('borrow')
-      .insert([{ user_id: user.id, book_id: bookId, borrow_date: new Date(), return_date: null }]);
-      
-    if (error) {
-      console.log('Error borrowing book:', error);
-    } else {
-      await supabase
-        .from('books')
-        .update({ available: false })
-        .eq('id', bookId);
-      fetchUser();  
-    }
-  };
-
   if (!user || !profile) return <div>Loading...</div>;
+
+  const getStatus = (dueDate, returnDate) => {
+    if (returnDate) return 'Returned';
+    const today = new Date();
+    if (new Date(dueDate) < today) return 'Overdue';
+    return 'Borrowed';
+  };
 
   return (
     <Layout>
       <div className='profile'>
-        <h1>Profile</h1>
-        <div className='details'>
-          <p>Name: {profile.full_name}</p>
-          <p>Email: {user.email}</p>
-          <p>ID: {user.id}</p>
-          <p>Dues: {profile.dues}</p>
+        <div className='profile-box'>
+        <table className='details'>
+          <tbody>
+            <tr>
+              <td>Name:</td>
+              <td>{profile.full_name}</td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td>{user.email}</td>
+            </tr>
+            <tr>
+              <td>ID:</td>
+              <td>{user.id}</td>
+            </tr>
+            <tr>
+              <td>Dues:</td>
+              <td>{profile.dues}</td>
+            </tr>
+          </tbody>
+          </table>
         </div>
+        <div className='borrowed-box'>
         <h2>Borrowed Books</h2>
         <table className='borrowed-books-table'>
           <thead>
@@ -106,21 +114,27 @@ const Profile = () => {
               <th>Borrow Date</th>
               <th>Due Date</th>
               <th>Return Date</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            {borrowedBooks.map(book => (
-              <tr key={book.id}>
+            {borrowedBooks.map(book => {
+              const status = getStatus(book.due_date, book.return_date);
+              return (
+                <tr key={book.id} >
                 <td>{book.books.title}</td>
                 <td>{new Date(book.borrow_date).toLocaleDateString("en-IN")}</td>
                 <td>{new Date(book.due_date).toLocaleDateString("en-IN")}</td>
-                <td>{book.return_date ? new Date(book.return_date).toLocaleDateString() : 
+                <td>{book.return_date ? new Date(book.return_date).toLocaleDateString("en-IN") : 
                   <button className='return-btn' onClick={() => returnBook(book.id, book.books.id)}>Return</button>
                   }</td>
+                  <td className={`status-${status.toLowerCase()}`}>{status}</td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
+        </div>
       </div>
     </Layout>
   );

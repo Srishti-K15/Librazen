@@ -1,29 +1,26 @@
 .profile {
-  width: 100%;
-  padding: 20px;
+  margin-top: 75px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profile-box,
+.borrowed-box {
+  width: 800px;
   background-color: #f8f9fa;
   border: 1px solid #ddd;
   border-radius: 10px;
-  margin: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 75px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.details td{
+  border: none;
+  text-align: left;
+  padding: 10px;
 }
 
-.details {
-  padding: 10px 0;
-}
-
-.details p {
-  margin: 8px 0;
-}
-
-.profile h1 {
-  text-align: center;
-}
-
-.profile p {
-  font-size: 16px;
-}
 .borrowed-books-table {
   width: 100%;
   border-collapse: collapse;
@@ -32,7 +29,7 @@
 .borrowed-books-table th,
 .borrowed-books-table td {
   border: 1px solid #d1d5db;
-  padding: 12px;
+  height: 60px;
   text-align: left;
 }
 .borrowed-books-table th {
@@ -45,11 +42,21 @@
 .borrowed-books-table tbody tr:nth-child(odd) {
   background-color: #ffffff;
 }
-.borrow-btn{
-  background-color: green;
-  color: white;
-}
+
 .return-btn{
   background-color: blue;
   color: white;
+}
+
+.status-returned {
+  color: green;
+  font-weight: bold;
+}
+.status-overdue{
+  color: red;
+  font-weight: bold;
+}
+.status-borrowed{
+  color: blue;
+  font-weight: bold;
 }
