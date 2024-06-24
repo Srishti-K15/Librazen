@@ -85,23 +85,7 @@ const AdminPortal = () => {
                   </tr>
               </thead>
               <tbody>
-                  {books.map(book => (
-                      <tr key={book.id}>
-                          <td>{book.title}</td>
-                          <td>{book.author}</td>
-                          <td>{book.available ? 'Yes' : 'No'}</td>
-                          <td>
-                              <button className='edit' onClick={() => {
-                                  setEditingBookId(book.id);
-                                  setTitle(book.title);
-                                  setAuthor(book.author);
-                                  setAvailable(book.available);
-                              }}>Edit</button>
-                              <button className='delete' onClick={() => deleteBook(book.id)}>Delete</button>
-                          </td>
-                      </tr>
-                  ))}
-                  <tr >
+              <tr >
                       <td className='update'>
                           <input type='text' placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)} />
                       </td>
@@ -120,6 +104,23 @@ const AdminPortal = () => {
                           {editingBookId ? <button className='add' onClick={updateBook}>Update Book</button> : <button className='add' onClick={addBook}>Add Book</button>}
                       </td>
                   </tr>
+                  {books.map(book => (
+                      <tr key={book.id}>
+                          <td>{book.title}</td>
+                          <td>{book.author}</td>
+                          <td>{book.available ? 'Yes' : 'No'}</td>
+                          <td>
+                              <button className='edit' onClick={() => {
+                                  setEditingBookId(book.id);
+                                  setTitle(book.title);
+                                  setAuthor(book.author);
+                                  setAvailable(book.available);
+                              }}>Edit</button>
+                              <button className='delete' onClick={() => deleteBook(book.id)}>Delete</button>
+                          </td>
+                      </tr>
+                  ))}
+                  
               </tbody>
           </table>
       </div>

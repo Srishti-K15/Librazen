@@ -134,6 +134,7 @@ const Profile = () => {
     <Layout>
       <div className='profile'>
         <div className='profile-box'>
+          <h2>Profile</h2>
           <table className='details'>
             <tbody>
               <tr>
@@ -199,7 +200,7 @@ const Profile = () => {
             </tbody>
           </table>
           <div className='buttons'>
-            {user.role === 'admin' && (
+            {user.role === 'supabase_admin' && (
               <button className='admin-portal-btn' onClick={goToAdminPortal}>
                 Admin Portal
               </button>

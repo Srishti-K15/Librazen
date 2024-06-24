@@ -15,7 +15,7 @@ const BookPage = () => {
 
   const fetchUser = async () => {
     try {
-      const { data: user, error: userError } = await supabase.auth.getUser();
+      const { data: {user}, error: userError } = await supabase.auth.getUser();
       if (userError) {
         console.log("Error fetching user", userError);
         return;
@@ -50,9 +50,13 @@ const BookPage = () => {
         return;
       }
 
+      const borrowDate = new Date();
+      const dueDate = new Date();
+      dueDate.setDate(borrowDate.getDate() + 14);
+
       const { data, error } = await supabase
         .from('borrow')
-        .insert([{ user_id: user.id, book_id: bookId, borrow_date: new Date(), return_date: null }]);
+        .insert([{ user_id: user.id, book_id: bookId, borrow_date: borrowDate, due_date: dueDate, return_date: null }]);
 
       if (error) {
         console.error('Error borrowing book:', error);
