@@ -1,10 +1,18 @@
 import React from 'react'
+import supabase from '../../config/supabaseClient';
 import './BookCard.css'
 
 const BookCard = ({book, onBorrow }) => {
+  const getCoverImageUrl = (path) => {
+    const { data } = supabase.storage.from('cover_page').getPublicUrl(path);
+    return data.publicUrl;
+  };
+
   return (
     <div className='book-card'>
-      <img src={book.cover_url} alt={book.title} className="book-cover" />
+      <div className='cover-container'>
+        <img src={getCoverImageUrl(book.cover_image)} alt={book.title} className="book-cover" />
+      </div>
       <h4>{book.title}</h4>
       <p className='author'><strong>Author:</strong>{book.author}</p>
       <button

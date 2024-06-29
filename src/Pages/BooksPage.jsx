@@ -3,19 +3,24 @@ import supabase from '../config/supabaseClient';
 import BookCard from '../Components/BookCard/BookCard';
 import './BooksPage.css';
 import Layout from '../Components/Layout/layout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+
 
 const BookPage = () => {
   const [books, setBooks] = useState([]);
   const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchOption, setSearchOption] = useState('catalogue'); // Default search option
 
   useEffect(() => {
     fetchUser();
-    fetchBooks(); // Initially fetch books when component mounts
+    fetchBooks();
   }, []);
 
   const fetchUser = async () => {
     try {
-      const { data: {user}, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) {
         console.log("Error fetching user", userError);
         return;
@@ -29,18 +34,41 @@ const BookPage = () => {
 
   const fetchBooks = async () => {
     try {
-      const { data, error } = await supabase
-        .from('books')
-        .select();
+      let query = supabase.from('books').select();
+
+      if (searchTerm) {
+        if (searchOption === 'title') {
+          query = query.ilike('title', `%${searchTerm}%`);
+        } else if (searchOption === 'author') {
+          query = query.ilike('author', `%${searchTerm}%`);
+        } else {
+          // Default to searching in both title and author
+          query = query.or(`title:ilike.${searchTerm}, author:ilike.${searchTerm}`);
+        }
+      }
+
+      const { data, error } = await query;
+
       if (error) {
         console.error('Error fetching books:', error);
       } else {
-        console.log('Fetched books:', data);
         setBooks(data);
       }
     } catch (error) {
       console.error('Error fetching books:', error.message);
     }
+  };
+
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchOptionChange = (e) => {
+    setSearchOption(e.target.value);
+  };
+
+  const handleSearch = () => {
+    fetchBooks();
   };
 
   const borrowBook = async (bookId) => {
@@ -66,7 +94,7 @@ const BookPage = () => {
           .from('books')
           .update({ available: false })
           .eq('id', bookId);
-        fetchBooks(); // Refresh book list after borrowing
+        fetchBooks();
         alert('Book borrowed successfully.');
       }
     } catch (error) {
@@ -77,8 +105,24 @@ const BookPage = () => {
   return (
     <Layout>
       <div className="book-page">
+        <div className="filter">
+          <select name="searchOption" value={searchOption} onChange={handleSearchOptionChange}>
+            <option value="catalogue">Library Catalogue</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+          </select>
+          <div className='search-container'>
+          <input
+            type="text"
+            name="searchTerm"
+            placeholder={`Search by ${searchOption}`}
+            onChange={handleInputChange}
+          />
+          <button onClick={handleSearch} className='search-btn'><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+          </div>
+          </div>
         <div className="book-list">
-          {books.map(book => (
+          {books.map((book) => (
             <BookCard key={book.id} book={book} onBorrow={() => borrowBook(book.id)} />
           ))}
         </div>

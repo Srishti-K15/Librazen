@@ -200,7 +200,7 @@ const Profile = () => {
             </tbody>
           </table>
           <div className='buttons'>
-            {user.role === 'supabase_admin' && (
+            {user.role === 'service_role' && (
               <button className='admin-portal-btn' onClick={goToAdminPortal}>
                 Admin Portal
               </button>
