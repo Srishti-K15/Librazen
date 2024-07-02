@@ -4,11 +4,10 @@ body {
     margin: 0;
     background-color: white
 }
-.signupPage{
+.signup-page{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
     margin-top: 80px;
 }
 
@@ -19,6 +18,7 @@ body {
     border-radius: 5px;
     background: #ECF0F1;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
 }
 
 .signup-container h2 {
