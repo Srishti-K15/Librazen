@@ -42,10 +42,9 @@ const BookPage = () => {
         } else if (searchOption === 'author') {
           query = query.ilike('author', `%${searchTerm}%`);
         } else {
-          // Default to searching in both title and author
-          query = query.or(`title:ilike.${searchTerm}, author:ilike.${searchTerm}`);
+          query = query.or(`title.ilike.%${searchTerm}%,author.ilike.%${searchTerm}%`);
         }
-      }
+      }      
 
       const { data, error } = await query;
 

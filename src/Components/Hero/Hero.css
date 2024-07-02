@@ -33,5 +33,7 @@
     justify-content: center;
     background-color:#E77E23;
     color: white;
-
   }
+.next:hover{
+    background-color:hsl(28, 80%, 62%);
+}

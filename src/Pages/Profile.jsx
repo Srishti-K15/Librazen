@@ -4,7 +4,35 @@ import supabase from '../config/supabaseClient';
 import Layout from '../Components/Layout/layout';
 import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenSquare } from '@fortawesome/free-solid-svg-icons';
+
+const calculateFineAndDueBooks = (books) => {
+  let fine = 0;
+  let dueBooks = 0;
+  const today = new Date();
+
+  books.forEach(book => {
+    if (!book.return_date) {
+      if (new Date(book.due_date) < today) {
+        // Calculate overdue fine (example: $1 per overdue day)
+        const daysOverdue = Math.ceil((today - new Date(book.due_date)) / (1000 * 60 * 60 * 24));
+        fine += daysOverdue * 1; // $1 per day overdue
+        dueBooks++;
+      }
+    } else {
+      // Calculate fine for returned books if returned late
+      const dueDate = new Date(book.due_date);
+      const returnDate = new Date(book.return_date);
+
+      if (returnDate > dueDate) {
+        const daysLate = Math.ceil((returnDate - dueDate) / (1000 * 60 * 60 * 24));
+        fine += daysLate * 1; // $1 per day late
+      }
+    }
+  });
+
+  return { fine, due_books: dueBooks };
+};
 
 
 const Profile = () => {
@@ -56,6 +84,20 @@ const Profile = () => {
         console.log("Error fetching borrowed books", booksError);
       } else {
         setBorrowedBooks(borrowedBooks);
+
+        // Calculate fine and dueBooks
+        const { fine, due_books: dueBooks } = calculateFineAndDueBooks(borrowedBooks);
+
+        // Update fine and dueBooks in profiles table
+        const { error: updateProfileError } = await supabase
+          .from('profiles')
+          .update({ fine, due_books: dueBooks })
+          .eq('id', user.id);
+
+        if (updateProfileError) {
+          console.log('Error updating profile:', updateProfileError);
+        }
+        fetchUser();
       }
     }
   };
@@ -65,21 +107,40 @@ const Profile = () => {
   }, []);
 
   const returnBook = async (borrowId, bookId) => {
-    const { error } = await supabase
+    const { error: borrowError } = await supabase
       .from('borrow')
       .update({ return_date: new Date() })
       .eq('id', borrowId);
-
-    if (error) {
-      console.log('Error returning book:', error);
-    } else {
-      await supabase
-        .from('books')
-        .update({ available: true })
-        .eq('id', bookId);
-      fetchUser();
+  
+    if (borrowError) {
+      console.log('Error returning book:', borrowError);
+      return;
     }
+  
+    const { error: booksError } = await supabase
+      .from('books')
+      .update({ available: true })
+      .eq('id', bookId);
+  
+    if (booksError) {
+      console.log('Error updating book availability:', booksError);
+      return;
+    }
+  
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        total_books_read: supabase.sql('total_books_read + 1')
+      })
+      .eq('id', user.id);
+  
+    if (profileError) {
+      console.log('Error updating total_books_read:', profileError);
+    }
+  
+    fetchUser();
   };
+  
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -88,10 +149,6 @@ const Profile = () => {
     } else {
       navigate('/login');
     }
-  };
-
-  const goToAdminPortal = () => {
-    navigate('/admin');
   };
 
   const handleSaveName = async () => {
@@ -121,7 +178,9 @@ const Profile = () => {
     }
   };
 
-  if (!user || !profile) return <div >Loading...</div>;
+  const goToAdminPortal = () => {
+    navigate('/admin'); 
+  };
 
   const getStatus = (dueDate, returnDate) => {
     if (returnDate) return 'Returned';
@@ -129,6 +188,8 @@ const Profile = () => {
     if (new Date(dueDate) < today) return 'Overdue';
     return 'Borrowed';
   };
+
+  if (!user || !profile) return <div>Loading...</div>;
 
   return (
     <Layout>
@@ -156,7 +217,7 @@ const Profile = () => {
                       <button className='cancel-btn' onClick={() => setIsEditingName(false)}>Cancel</button>
                     </>
                   ) : (
-                    <button className='edit-icon' onClick={() => setIsEditingName(true)}><FontAwesomeIcon icon={faPenToSquare} alt="Edit" /></button>
+                    <button className='edit-icon' onClick={() => setIsEditingName(true)}><FontAwesomeIcon icon={faPenSquare} alt="Edit" /></button>
                   )}
                 </td>
               </tr>
@@ -178,24 +239,25 @@ const Profile = () => {
                       <button className='cancel-btn' onClick={() => setIsEditingEmail(false)}>Cancel</button>
                     </>
                   ) : (
-                    <button className='edit-icon' onClick={() => setIsEditingEmail(true)}><FontAwesomeIcon icon={faPenToSquare} alt="edit" /></button>
+                    <button className='edit-icon' onClick={() => setIsEditingEmail(true)}><FontAwesomeIcon icon={faPenSquare} alt="Edit" /></button>
                   )}
                 </td>
               </tr>
               <tr>
                 <td>ID:</td>
                 <td>{user.id}</td>
-                <td></td>
               </tr>
               <tr>
                 <td>Role:</td>
-                <td>{user.role}</td>
-                <td></td>
+                <td>{user.role === 'service_role' ? 'Admin' : 'User'}</td>
               </tr>
               <tr>
-                <td>Dues:</td>
-                <td>{profile.dues}</td>
-                <td></td>
+                <td>Books Due:</td>
+                <td>{profile.due_books}</td>
+              </tr>
+              <tr>
+                <td>Fine:</td>
+                <td>₹{profile.fine}</td>
               </tr>
             </tbody>
           </table>
