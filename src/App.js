@@ -7,6 +7,7 @@ import Profile from './Pages/Profile';
 import AdminPortal from './Components/AdminPortal';
 import Books from './Pages/BooksPage'
 import Leaderboard from './Pages/Leaderboard';
+import LibraryCharts from './Pages/LibraryCharts';
 import './index.css'
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/admin" element={<AdminPortal />}></Route>
         <Route path="/books" element={<Books />}></Route>
         <Route path="/leaderboard" element={<Leaderboard />}></Route>
+        <Route path="/charts" element={<LibraryCharts />}></Route>
       </Routes>
     </Router>
   );
