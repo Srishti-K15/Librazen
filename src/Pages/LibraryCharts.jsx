@@ -1,59 +1,144 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import supabase from '../config/supabaseClient';
+import './LibraryCharts.css';
+import Layout from '../Components/Layout/layout';
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(BarElement, CategoryScale, LinearScale);
 
 const LibraryCharts = () => {
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const [booksIssuedData, setBooksIssuedData] = useState(null);
+  const [fineAnalysisData, setFineAnalysisData] = useState(null);
+  const [booksReturnedData, setBooksReturnedData] = useState(null);
 
-  const booksIssuedData = {
-    labels: labels,
-    datasets: [{
-      label: 'Books Issued',
-      data: [120, 150, 170, 130, 160, 190, 220, 180, 210, 240, 230, 250],
-      borderColor: 'rgba(75, 192, 192, 1)',
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      fill: false,
-      borderWidth: 1
-    }]
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      // Fetch books issued data
+      const { data: booksIssued } = await supabase
+        .from('borrow')
+        .select('borrow_date');
+
+      // Fetch fine analysis data
+      const { data: fines } = await supabase
+        .from('borrow')
+        .select('due_date, return_date');
+
+      // Fetch books returned data
+      const { data: booksReturned } = await supabase
+        .from('borrow')
+        .select('return_date');
+
+      // Process data to fit the chart format
+      setBooksIssuedData(processBooksIssuedData(booksIssued));
+      setFineAnalysisData(processFineAnalysisData(fines));
+      setBooksReturnedData(processBooksReturnedData(booksReturned));
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    }
   };
 
-  const fineAnalysisData = {
-    labels: labels,
-    datasets: [{
-      label: 'Fine Analysis',
-      data: [300, 400, 350, 320, 450, 480, 500, 450, 470, 520, 530, 550],
-      borderColor: 'rgba(153, 102, 255, 1)',
-      backgroundColor: 'rgba(153, 102, 255, 0.2)',
-      fill: false,
-      borderWidth: 1
-    }]
+  const processBooksIssuedData = (booksIssued) => {
+    const labels = getLabels();
+    const data = Array(12).fill(0);
+
+    booksIssued.forEach(book => {
+      const month = new Date(book.borrow_date).getMonth();
+      data[month]++;
+    });
+
+    return {
+      labels: labels,
+      datasets: [{
+        label: 'Books Issued',
+        data: data,
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    };
   };
 
-  const booksReturnedData = {
-    labels: labels,
-    datasets: [{
-      label: 'Books Returned',
-      data: [110, 140, 160, 120, 150, 180, 210, 170, 200, 230, 220, 240],
-      borderColor: 'rgba(255, 159, 64, 1)',
-      backgroundColor: 'rgba(255, 159, 64, 0.2)',
-      fill: false,
-      borderWidth: 1
-    }]
+  const processFineAnalysisData = (fines) => {
+    const labels = getLabels();
+    const data = Array(12).fill(0);
+
+    fines.forEach(fine => {
+      if (fine.return_date && new Date(fine.return_date) > new Date(fine.due_date)) {
+        const month = new Date(fine.due_date).getMonth();
+        const daysLate = Math.ceil((new Date(fine.return_date) - new Date(fine.due_date)) / (1000 * 60 * 60 * 24));
+        data[month] += daysLate;
+      }
+    });
+
+    return {
+      labels: labels,
+      datasets: [{
+        label: 'Fine Analysis',
+        data: data,
+        backgroundColor: 'rgba(41, 5, 246, 0.6)',
+        borderColor: 'rgba(41, 5, 246, 1)',
+        borderWidth: 1
+      }]
+    };
+  };
+
+  const processBooksReturnedData = (booksReturned) => {
+    const labels = getLabels();
+    const data = Array(12).fill(0);
+
+    booksReturned
+      .filter(book => book.return_date) // Filter out entries with null return_date
+      .forEach(book => {
+        const month = new Date(book.return_date).getMonth();
+        data[month]++;
+      });
+
+    return {
+      labels: labels,
+      datasets: [{
+        label: 'Books Returned',
+        data: data,
+        backgroundColor: 'rgb(245, 0, 0, 0.6)',
+        borderColor: 'rgba(245, 0, 0, 1)',
+        borderWidth: 1
+      }]
+    };
+  };
+
+  const getLabels = () => {
+    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   };
 
   return (
-    <div>
-      <h2>Books Issued per Month</h2>
-      <Line data={booksIssuedData} />
+    <Layout>
+      <div className='charts-container'>
+        {booksIssuedData && (
+          <div className='charts'>
+            <h2>Books Issued per Month</h2>
+            <Bar data={booksIssuedData} />
+          </div>
+        )}
 
-      <h2>Fine Analysis per Month</h2>
-      <Line data={fineAnalysisData} />
+        {fineAnalysisData && (
+          <div className='charts'>
+            <h2>Fine Analysis per Month</h2>
+            <Bar data={fineAnalysisData} />
+          </div>
+        )}
 
-      <h2>Books Returned per Month</h2>
-      <Line data={booksReturnedData} />
-    </div>
+        {booksReturnedData && (
+          <div className='charts'>
+            <h2>Books Returned per Month</h2>
+            <Bar data={booksReturnedData} />
+          </div>
+        )}
+      </div>
+    </Layout>
   );
 };
 

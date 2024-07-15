@@ -29,7 +29,19 @@ const SignUp = () => {
       setError(error.message);
     } else {
       console.log('Sign-up successful:', data);
+      const { user } = data;
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          { id: user.id, email: user.email, full_name: fullName }
+        ]);
+
+      if (profileError) {
+        console.error('Error inserting into profiles:', profileError.message);
+        setError(profileError.message);
+      } else {
       setSuccess('Sign-up successful! Please check your email for confirmation.');
+      }
     }
   };
 
