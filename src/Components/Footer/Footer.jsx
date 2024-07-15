@@ -29,7 +29,7 @@ const Footer = () => {
         </div>
         <div className="footer-section contact">
           <p>Contact us: 
-          <a href="mailto:support@librazen.com">support@librazen.com</a></p>
+          <a href="mailto:team_librazen@outlook.com">team_librazen@outlook.com</a></p>
         </div>
       </div>
     </footer>
